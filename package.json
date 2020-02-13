@@ -1,0 +1,35 @@
+{
+  "name": "event-driven-architecture",
+  "version": "0.0.1",
+  "description": "A event driven archetecture api",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp && node dist/index.js",
+    "dev": "nodemon --exec babel-node index.js",
+    "test": "npx mocha --exit --require @babel/register 'tests/**/*.js'"
+  },
+  "keywords": [
+    "event-driven",
+    "socket",
+    "api"
+  ],
+  "author": "@lukaswilkeer",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.6.2",
+    "babel": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "mocha": "^7.0.1",
+    "sinon": "^8.1.1",
+    "socket.io-client": "^2.3.0"
+  },
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}
