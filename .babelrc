@@ -6,8 +6,12 @@
 			"debug": false
 		}]
 	],
+<<<<<<< HEAD
 	"plugins": [
 		"@babel/plugin-transform-modules-commonjs",
 		"@babel/plugin-proposal-optional-chaining"
 	]
+=======
+	"plugins": ["@babel/plugin-transform-modules-commonjs"]
+>>>>>>> 07a4b27a0754cb216fb49b71a2d5936a38174bdc
 }
