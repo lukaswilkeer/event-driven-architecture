@@ -1,6 +1,7 @@
 import sinon from 'sinon'
 import chai from 'chai'
 import { expect } from 'chai'
+import jwt from 'jsonwebtoken'
 import * as security from '../src/security'
 import { user, userToken, userTokenExpired } from './__mocks__/tokens'
 
@@ -21,6 +22,7 @@ describe('Password hash', () => {
 describe('Auth token validation', () => {
     it('should check valid tokens', (done) => {
         const decoded = security.decode(userToken)
+
         expect(decoded).to.have.property('data')
         expect(decoded.data).to.have.property('name')
         done()
@@ -33,6 +35,7 @@ describe('Auth token validation', () => {
         setTimeout(() => {
             const expiration = date.setUTCSeconds(decoded.expiresIn)
             const isExpired = expiration.valueOf() > Date.now().valueOf()
+
             expect(isExpired).to.equal(false)
             done()
         }, 1500)
@@ -40,6 +43,7 @@ describe('Auth token validation', () => {
 
     it('should authenticate user', (done) => {
         const result = security.authenticate(security.decode(userToken))
+
         expect(result).to.equal(true)
         done()
     })
@@ -49,6 +53,19 @@ describe('Auth token validation', () => {
         const encoded = security.encode(user)
        
         expect(encoded).to.be.equal('sometoken')
+        done()
+    })
+
+    it('should return null if the decode functions receives invalid data', (done) => {
+        const _jwtCallback = (err, data) => null
+
+        const jwtVerifyMock = sinon.stub(jwt, 'verify')
+            .callsFake((token, secret, _cb) => _jwtCallback())
+
+
+        const decoded = security.decode(null)
+        
+        expect(decoded).to.equals(null)
         done()
     })
 })
