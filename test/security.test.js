@@ -48,6 +48,14 @@ describe('Auth token validation', () => {
         done()
     })
 
+    it('should return null if the decode functions receives invalid data', (done) => {
+        const decoded = security.decode(null)
+        
+        expect(decoded).to.equals(null)
+        done()
+    })
+
+
     it('should encode the data', (done) => {
         const encodeStub = sinon.stub(security, 'encode').callsFake((user) => 'sometoken')
         const encoded = security.encode(user)
@@ -56,16 +64,10 @@ describe('Auth token validation', () => {
         done()
     })
 
-    it('should return null if the decode functions receives invalid data', (done) => {
-        const _jwtCallback = (err, data) => null
+    it('should return null when encode doens`t receive data', (done) => {
+        const encoded = security.encode()
 
-        const jwtVerifyMock = sinon.stub(jwt, 'verify')
-            .callsFake((token, secret, _cb) => _jwtCallback())
-
-
-        const decoded = security.decode(null)
-        
-        expect(decoded).to.equals(null)
+        expect(encoded).to.equals(null)
         done()
     })
 })
