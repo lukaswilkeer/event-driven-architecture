@@ -6,7 +6,6 @@ import io from '../index'
 import { socketConnect } from './__mocks__/connect'
 import { userToken } from './__mocks__/tokens'
 
-
 describe('Connection', () => {
   it('should connect the user to the api', (done) => {
     let connections = []
