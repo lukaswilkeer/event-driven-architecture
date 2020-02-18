@@ -3,7 +3,7 @@ import chai from 'chai'
 import { expect } from 'chai'
 import jwt from 'jsonwebtoken'
 import * as security from '../src/security'
-import { user, userToken, userTokenExpired } from './__mocks__/tokens'
+import { user, userToken } from './__mocks__/tokens'
 
 beforeEach(() => {
     sinon.restore()
@@ -49,7 +49,23 @@ describe('Auth token validation', () => {
     })
 
     it('should return null if the decode functions receives invalid data', (done) => {
-        const decoded = security.decode(null)
+        const consoleStub = sinon.stub(console, 'error').getCall(1)
+
+        const __callback = (err, data) => {
+            expect(err).to.be.an(object)
+            return null
+        }
+
+        const jwtVerifyMock = sinon.stub(jwt, 'verify').callsFake((token, secret, __callback) => {
+            const err = {
+                name: 'JsonWebTokenError',
+                message: 'An error provided by JWT'
+            }
+
+            return __callback(err, null)
+        })
+
+        const decoded = security.decode(undefined)
         
         expect(decoded).to.equals(null)
         done()

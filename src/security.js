@@ -20,8 +20,7 @@ export const encode = (data) => {
 export const decode = (token) => {
   return jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      // fixme: ommit this message on test environment
-      // console.error(err)
+      console.error(err)
       return null
     }
 
@@ -30,9 +29,13 @@ export const decode = (token) => {
 }
 
 export const authenticate = (decoded) => {
+  if (typeof decoded !== 'object' || decoded?.data === undefined) {
+    return false
+  }
+
   const date = new Date(0)
   const expires = date.setUTCSeconds(decoded?.expiresIn)
   const isExpired = expires.valueOf() > Date.now().valueOf()
 
-  return isExpired || decoded?.data?.account_type > 0
+  return isExpired !== false || decoded?.data?.account_type > 0
 }
