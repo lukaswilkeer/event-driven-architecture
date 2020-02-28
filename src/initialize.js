@@ -1,6 +1,9 @@
 import fs from 'fs'
+import debug from 'debug'
 import { stats } from 'fs'
 import { join, init } from 'lodash/fp'
+
+const log = debug('app')
 
 const forwadSlash = /\//ig
 
@@ -20,10 +23,10 @@ const removeDotJs = (filename) => {
 export const services = new Map()
 
 export const logServices = () => {
-  console.log('Logging services')
+  log('Logging services')
 
   for (const service of services.entries()) {
-    console.log(`${service[0]} up`)
+    log(`${service[0]} up`)
   }
 }
 

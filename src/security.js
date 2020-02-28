@@ -20,7 +20,6 @@ export const encode = (data) => {
 export const decode = (token) => {
   return jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      console.error(err)
       return null
     }
 

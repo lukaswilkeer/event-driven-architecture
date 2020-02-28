@@ -7,10 +7,6 @@ import { socketConnect } from './__mocks__/connect'
 import { userToken } from './__mocks__/tokens'
 
 describe('Connection', () => {
-  // beforeEach(() => {
-  //   const consoleStub = sinon.stub(console, 'log')
-  // })
-
   it('should connect the user to the api', (done) => {
     const client = socketConnect(userToken)
 
