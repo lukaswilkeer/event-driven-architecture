@@ -40,6 +40,8 @@ In contrast with an OOP design that can lead to a better code readability and or
 
 This can be supressed with an imperative design within DRY method, but can lead to problems with the maintence of the structure. One change on a commom function can break a lot of things. Same on a functional way, that are the ideal, (besides the cost), so, make sure that you write tests carefully, this guarantes your code integrity.
 
+---------
+
 *Note 1:* This is a work in progress demonstration.
 
 *Note 2:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
