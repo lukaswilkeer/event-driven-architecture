@@ -28,5 +28,18 @@ client.emit('event', buffer)
 This way, the system matches for the current testFunc inside test module and send a socket instance with a buffer to be processed.
 On the other way, this causes a problem. The system cannot handle stream events.
 
+## About performance
 
-*Note:* This is a work in progress demonstration.
+This POC uses dinamaicaly imported modules, for every call you'll need to evaluate the role module, turns out there within large modules causes this to be ineficciente, both occur on a OOP implementation where evenry call mens a new instance of a module.
+
+To resolve this, you'll need to do it manually, importing every module and declare every endpoint by hand, causing the role program to be evaluated one time, resulting on a benefit, the program doesn't "sobrecharge" with evaluating new modules at every income call or creating new instances.
+
+## About system design
+
+In contrast with an OOP design that can lead to a better code readability and organizations, the large cost of creating a new instance on every income call turns out not ideal, but can lead to a better code.
+
+This can be supressed with an imperative design within DRY method, but can lead to problems with the maintence of the structure. One change on a commom function can break a lot of things. Same on a functional way, that are the ideal, (besides the cost), so, make sure that you write tests carefully, this guarantes your code integrity.
+
+*Note 1:* This is a work in progress demonstration.
+
+*Note 2:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
