@@ -11,7 +11,7 @@ class InitializeServices {
     this.initializeServices(dir)
   }
 
-  // note: static methods doens't bind
+  // note: static methods doesn't bind
   mountDir(dir) {
     const forwadSlash = /\//ig
     const splited = dir.split(forwadSlash)
