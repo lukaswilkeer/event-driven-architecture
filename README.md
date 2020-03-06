@@ -2,6 +2,8 @@
 
 This repo is a demonstration of a evnet based architecture based on socket connections.
 
+_Note:_ This is a OOP version of a event-driven-architecture
+
 ## Main goal
 
 Demonstrate that is possible to mantain a large event-driven api without pain.
