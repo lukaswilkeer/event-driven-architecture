@@ -5,50 +5,61 @@ import { join, init } from 'lodash/fp'
 
 const log = debug('app')
 
-const forwadSlash = /\//ig
-
-const mountDir = (dir) => {
-  const splited = dir.split(forwadSlash)
-  const dired = removeDotJs(join('.', splited))
-
-  return dired
-}
-
-const removeDotJs = (filename) => {
-  const extension = /\.[0-9a-z]+$/i
-
-  return join('', init((filename.split(extension))))
-}
-
-export const services = new Map()
-
-export const logServices = () => {
-  log('Logging services')
-
-  for (const service of services.entries()) {
-    log(`${service[0]} up`)
+class InitializeServices {
+  constructor(dir) {
+    this.services = new Map()
+    this.initializeServices(dir)
   }
-}
 
-export const initializeServices = (dir) => fs.readdir(`${process.cwd()}/src/${dir}`, (err, itens) => {
-  if (err instanceof Error && err.code == 'ENOTDIR') {
-    services.set(`${mountDir(dir)}`, `./src/${dir}`)
-  } else {
-    itens.map((file) => {
-      const isFile = fs.stat(`${process.cwd()}/src/${dir}/${file}`, (err, stat) => {
-        if (err) {
-          return false
-        } else {
-          return !stat.isDirectory()
-        }
-      })
+  // note: static methods doesn't bind
+  mountDir(dir) {
+    const forwadSlash = /\//ig
+    const splited = dir.split(forwadSlash)
+    const dired = this.removeDotJs(join('.', splited))
 
-      if (isFile) {
-        services.set(`api.${mountDir(dir)}.${removeDotJs(file)}`, `./src/${dir}`)
+    return dired
+  }
+
+
+  // note: static methods doesn't bind
+  removeDotJs(filename) {
+    const extension = /\.[0-9a-z]+$/i
+
+    return join('', init((filename.split(extension))))
+  }
+
+  logServices() {
+    log('Logging services')
+
+    for (const service of this.services.entries()) {
+      log(`${service[0]} up`)
+    }
+  }
+
+  initializeServices(dir) {
+    return fs.readdir(`${process.cwd()}/src/${dir}`, (err, itens) => {
+      if (err instanceof Error && err.code == 'ENOTDIR') {
+        this.services.set(`${this.mountDir(dir)}`, `./src/${dir}`)
+        const fileToLog = this.services.get(`${this.mountDir(dir)}`)
       } else {
-        const currentDir = `${dir}/${file}`
-        initializeServices(currentDir)
+        itens.map((file) => {
+          const isFile = fs.stat(`${process.cwd()}/src/${dir}/${file}`, (err, stat) => {
+            if (err) {
+              return false
+            } else {
+              return !stat.isDirectory()
+            }
+          })
+
+          if (isFile) {
+            this.services.set(`api.${this.mountDir(dir)}.${this.removeDotJs(file)}`, `./src/${dir}`)
+          } else {
+            this.initializeServices(`${dir}/${file}`)
+          }
+        })
       }
     })
   }
-})
+}
+
+export default InitializeServices

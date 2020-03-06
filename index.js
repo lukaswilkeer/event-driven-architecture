@@ -1,18 +1,18 @@
 import SocketServer from 'socket.io'
 import debug from 'debug'
 import { join, init, last } from 'lodash/fp'
-import { initializeServices, services, logServices } from './src/initialize'
+import InitializeServices from './src/initialize'
 import { getAuthHeader } from './src/utils'
 import { authenticate, decode } from './src/security'
 
 const log = debug('app')
 
-initializeServices('api')
+const servicesInit = new InitializeServices('api')
 
 // fixme: the logServices function doens't work until all
 // services are located, due to the fact, this causes an error
 // where the services doesn't get logged
-setTimeout(() => logServices(), 1000)
+setTimeout(() => servicesInit.logServices(), 1000)
 
 const dispatcher = (socket) => (buffer) => {
     const event = buffer?.event
@@ -20,12 +20,13 @@ const dispatcher = (socket) => (buffer) => {
     
     const eventFn = last(event.split('.'))
     const serviceModule = join('.', init(event.split('.')))
-    const service = services.get(serviceModule)
+    const service = servicesInit.services.get(serviceModule)
     log(`Calling: ${event}, ${service}`)
 
     if (service) {
-      const module = require(service)
-      module[eventFn](socket, buffer)
+      const moduleToInitiate = require(service)
+      const moduleFn = new moduleToInitiate.default(socket, buffer)
+      moduleFn[eventFn]()
     } else {
       socket.emit('message', 'Service does`t exist')
     }
