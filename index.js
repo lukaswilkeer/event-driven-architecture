@@ -14,10 +14,15 @@ initializeServices('api')
 // where the services doesn't get logged
 setTimeout(() => logServices(), 1000)
 
+const toUpperFirstLetter = (str) => {
+  return str[0].toUpperCase()
+}
+
 const dispatcher = (socket) => (buffer) => {
     const event = buffer?.event
     const data = buffer?.data
-    
+   
+   if (event !== undefined) {
     const eventFn = last(event.split('.'))
     const serviceModule = join('.', init(event.split('.')))
     const service = services.get(serviceModule)
@@ -27,8 +32,14 @@ const dispatcher = (socket) => (buffer) => {
       const module = require(service)
       module[eventFn](socket, buffer)
     } else {
-      socket.emit('message', 'Service does`t exist')
+      log(event)
+      const eventName = last(event.split('.'))
+      const eventNameResponse = toUpperFirstLetter(eventName) + last(eventName.split('.')).substring(1)
+      socket.emit('message', `${eventNameResponse} doesn't exist`)
     }
+  } else {
+    socket.emit('message', `Event cannot be empty`)
+  }
 }
 
 const io = new SocketServer(3000, {
