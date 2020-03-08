@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
-import { secret } from './secret.js'
+import { secret } from './secret'
 
 export const passwordHash = (password) => {
   return crypto
@@ -20,7 +20,6 @@ export const encode = (data) => {
 export const decode = (token) => {
   return jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      console.error(err)
       return null
     }
 
@@ -29,7 +28,7 @@ export const decode = (token) => {
 }
 
 export const authenticate = (decoded) => {
-  if (typeof decoded !== 'object' || decoded?.data === undefined) {
+  if (typeof decoded !== 'object' || decoded?.data === null || decoded?.data === undefined) {
     return false
   }
 
@@ -37,5 +36,5 @@ export const authenticate = (decoded) => {
   const expires = date.setUTCSeconds(decoded?.expiresIn)
   const isExpired = expires.valueOf() > Date.now().valueOf()
 
-  return isExpired !== false || decoded?.data?.account_type > 0
+  return isExpired !== false || decoded?.data?.account_type >= 0
 }
