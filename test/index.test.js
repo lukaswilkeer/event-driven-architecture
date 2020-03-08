@@ -67,4 +67,35 @@ describe('Connection', () => {
       done()
     })
   })
+
+  it('should return an error message if a endpoint doesn`t exist', (done) => {
+    const client = socketConnect(userToken)
+
+    const event = {
+      event: 'api.service.test.testFuncFn',
+      data: 'You`re welcome'
+    }
+
+    client.emit('event', event)
+
+    client.on('message', (data) => {
+      expect(data).to.equals(`TestFuncFn doesn't exist`)
+      done()
+    })
+  })
+
+  it('should return an error message if a endpoint is nullish', (done) => {
+    const client = socketConnect(userToken)
+
+    const event = {
+      data: 'You`re welcome'
+    }
+
+    client.emit('event', event)
+
+    client.on('message', (data) => {
+      expect(data).to.equals(`Event cannot be empty`)
+      done()
+    })
+  })
 })
