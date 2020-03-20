@@ -26,7 +26,7 @@ client.emit('event', buffer)
 ```
 
 This way, the system matches for the current testFunc inside test module and send a socket instance with a buffer to be processed.
-On the other way, this causes a problem. The system cannot handle stream events.
+On a other side, this causes a problem. The system cannot handle stream events.
 
 *Note:* This is a work in progress demonstration.
 
