@@ -30,7 +30,14 @@ const dispatcher = (socket) => (buffer) => {
 
     if (service) {
       const module = require(service)
-      module[eventFn](socket, buffer)
+      if (module[eventFn] !== undefined) {
+        module[eventFn](socket, buffer)
+      } else {
+        const eventName = last(event.split('.'))
+        const eventNameResponse = toUpperFirstLetter(eventName) + last(eventName.split('.')).substring(1)
+        socket.emit('message', `${eventNameResponse} doesn't exist`)
+      }
+
     } else {
       log(event)
       const eventName = last(event.split('.'))
