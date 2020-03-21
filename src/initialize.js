@@ -39,7 +39,7 @@ class InitializeServices {
   initializeServices(dir) {
     return fs.readdir(`${process.cwd()}/src/${dir}`, (err, itens) => {
       if (err instanceof Error && err.code == 'ENOTDIR') {
-        this.services.set(`${this.mountDir(dir)}`, `./src/${dir}`)
+        this.services.set(`${this.mountDir(dir)}`, `../src/${dir}`)
         const fileToLog = this.services.get(`${this.mountDir(dir)}`)
       } else {
         itens.map((file) => {
@@ -52,7 +52,7 @@ class InitializeServices {
           })
 
           if (isFile) {
-            this.services.set(`api.${this.mountDir(dir)}.${this.removeDotJs(file)}`, `./src/${dir}`)
+            this.services.set(`api.${this.mountDir(dir)}.${this.removeDotJs(file)}`, `../src/${dir}`)
           } else {
             this.initializeServices(`${dir}/${file}`)
           }
