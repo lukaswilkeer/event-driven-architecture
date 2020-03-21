@@ -11,7 +11,6 @@ class InitializeServices {
     this.initializeServices(dir)
   }
 
-  // note: static methods doesn't bind
   mountDir(dir) {
     const forwadSlash = /\//ig
     const splited = dir.split(forwadSlash)
@@ -21,26 +20,18 @@ class InitializeServices {
   }
 
 
-  // note: static methods doesn't bind
   removeDotJs(filename) {
     const extension = /\.[0-9a-z]+$/i
 
     return join('', init((filename.split(extension))))
   }
 
-  logServices() {
-    log('Logging services')
-
-    for (const service of this.services.entries()) {
-      log(`${service[0]} up`)
-    }
-  }
-
   initializeServices(dir) {
     return fs.readdir(`${process.cwd()}/src/${dir}`, (err, itens) => {
       if (err instanceof Error && err.code == 'ENOTDIR') {
-        this.services.set(`${this.mountDir(dir)}`, `../src/${dir}`)
-        const fileToLog = this.services.get(`${this.mountDir(dir)}`)
+        const service = `${this.mountDir(dir)}`
+        this.services.set(service, `../src/${dir}`)
+        log(`Service ${service} up`)
       } else {
         itens.map((file) => {
           const isFile = fs.stat(`${process.cwd()}/src/${dir}/${file}`, (err, stat) => {
@@ -52,7 +43,9 @@ class InitializeServices {
           })
 
           if (isFile) {
-            this.services.set(`api.${this.mountDir(dir)}.${this.removeDotJs(file)}`, `../src/${dir}`)
+            const service = `api.${this.mountDir(dir)}.${this.removeDotJs(file)}`
+            this.services.set(service, `../src/${dir}`)
+            log(`Service ${service} up`)
           } else {
             this.initializeServices(`${dir}/${file}`)
           }

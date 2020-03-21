@@ -5,7 +5,6 @@ class Test {
   }
 
   testFunc() {
-    console.log('Executando a função')
     this.socket.emit('message', this.buffer?.data)
   }
 }

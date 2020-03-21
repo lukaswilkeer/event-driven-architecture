@@ -1,12 +1,12 @@
 import debug from 'debug'
 import { init, last, join } from 'lodash/fp'
+import InitializeServices from './initialize'
 
 const log = debug('app')
 
-class dispatcher {
-  constructor(services, dir) {
-    this.services = services
-    this.dir = dir
+class dispatcher extends InitializeServices {
+  constructor(dir) {
+    super(dir)
     this.event = ''
   }
 
@@ -30,7 +30,14 @@ class dispatcher {
       if (service) {
         const moduleToInitiate = require(service)
         const moduleFn = new moduleToInitiate.default(socket, buffer)
-        moduleFn[eventFn]()
+        if (moduleFn[eventFn] !== undefined) {
+          moduleFn[eventFn]()
+        } else {
+          const eventName = last(this.event.split('.'))
+          const eventNameResponse = this.toUpperFirstLetter(eventName) + last(eventName.split('.')).substring(1)
+          socket.emit('message', `${eventNameResponse} doesn't exist`)
+          log(`${this.event} is undefined`)
+        }
       } else {
         const eventName = last(this.event.split('.'))
         const eventNameResponse = this.toUpperFirstLetter(eventName) + last(eventName.split('.')).substring(1)
