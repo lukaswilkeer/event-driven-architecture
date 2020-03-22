@@ -46,6 +46,4 @@ This can be supressed with an imperative design within DRY method, but can lead 
 
 *Note 1:* This is a work in progress demonstration.
 
-*Note 2:* Need a way to work with assyncrhonous strem events, this can e solved using OOP.
-
-*Note 3:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
+*Note 2:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
