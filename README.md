@@ -28,8 +28,6 @@ client.emit('event', buffer)
 This way, the system matches for the current testFunc inside test module and send a socket instance with a buffer to be processed.
 On a other side, this causes a problem. The system cannot handle stream events.
 
-*Note:* This is a work in progress demonstration.
-
 ## About performance
 
 This POC uses dinamaicaly imported modules, for every call you'll need to evaluate the role module, turns out there within large modules causes this to be ineficciente, both occur on a OOP implementation where evenry call mens a new instance of a module.
