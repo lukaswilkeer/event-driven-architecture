@@ -55,15 +55,12 @@ describe('Connection', () => {
   it('should call services', (done) => {
     const client = socketConnect(userToken)
 
-    const event = {
-      event: 'api.services.test.testFunc',
-      data: 'You`re welcome'
-    }
+    const event = { event: 'api.services.status' }
 
     client.emit('event', event)
 
     client.on('message', (data) => {
-      expect(data).to.equals(event.data)
+      expect(data).to.equals('online')
       done()
     })
   })
