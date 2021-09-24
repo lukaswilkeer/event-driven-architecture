@@ -16,7 +16,7 @@ The _event_ is correspondend to a system function call, and _data_ where data to
 Example os a event call:
 
 ```json
-{ "event": "api.services.test.testFunc", "data": "You`re welcome" }
+{ "event": "api.services.status", "data": "You`re welcome" }
 ```
 
 To call, just emit a 'event' call from the socket client connect.
@@ -41,4 +41,8 @@ In contrast with an OOP design that can lead to a better code readability and or
 This can be supressed with an imperative design within DRY method, but can lead to problems with the maintence of the structure. One change on a commom function can break a lot of things. Same on a functional way, ([besides the cost](https://github.com/lukaswilkeer/event-driven-architecture/issues/3)), so, make sure that you write tests carefully, this guarantees your code integrity.
 
 
-*Note 2:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
+*Note 1:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
+
+## LICENCE
+
+MIT.
