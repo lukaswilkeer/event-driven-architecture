@@ -1,9 +1,10 @@
-import SocketServer from 'socket.io'
+import net from 'net'
 import debug from 'debug'
 import { join, init, last } from 'lodash/fp'
 import { initializeServices, services, logServices } from './src/initialize'
 import { getAuthHeader } from './src/utils'
 import { authenticate, decode } from './src/security'
+import { server } from 'sinon'
 
 const log = debug('app')
 
@@ -18,9 +19,11 @@ const toUpperFirstLetter = (str) => {
   return str[0].toUpperCase()
 }
 
-const dispatcher = (socket) => (buffer) => {
-    const event = buffer?.event
-    const data = buffer?.data
+const dispatch = (socket) => (buffer) => {
+  console.log(buffer.toString())
+  buffer = buffer.toString()
+  const event = buffer?.event
+  const data = buffer?.data
    
    if (event !== undefined) {
     const eventFn = last(event.split('.'))
@@ -49,26 +52,39 @@ const dispatcher = (socket) => (buffer) => {
   }
 }
 
-const io = new SocketServer(3000, {
-  path: '/',
-  serverClient: true,
-  cookie: false,
-  transports: ['pooling', 'websocket'],
-})
-
-const closeConnection = (socket) => {
-  socket.emit('message', 'user hasn`t permission')
-  socket.disconnect()
+const verifyAuthorization = (fn) => (socket) => {
+  try {
+    if (!(socket?.authorization)) {
+      throw new Error('Could not found authorization token')
+    } else {
+      try {
+        const authorization = authenticate(socket?.authorization)
+        if (authorization) {
+          debug('A new user into the api')
+          fn(socket)
+        } else {
+          throw new Error('Could not found authorization token')
+        }
+      } catch (err) {
+        debug(err)
+        socket.write({ 'data': [err.error, err.message]})
+      }
+    }  
+  } catch (err) {
+    debug(err)
+    socket.write({ 'data': [err.error, err.message]})
+  }
 }
 
-io.on('connection', (socket) => {
-  socket.use((packet, next) => {
-    return authenticate(decode(getAuthHeader(socket))) 
-      ? next()
-      : closeConnection(socket)
-  })
-  
-  socket.on('event', dispatcher(socket))
+const io = net.Server({})
+
+io.on('data', verifyAuthorization(dispatch(io)))
+
+io.on('error', (errorMessage) => {
+  console.error(errorMessage)
+  io.close()
 })
+
+io.listen(3000, () => `Listening on port 3000`)
 
 export default io

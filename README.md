@@ -45,3 +45,7 @@ This can be supressed with an imperative design within DRY method, but can lead 
 *Note 1:* This is a work in progress demonstration.
 
 *Note 2:* Lacks performance measurements to decide either manually or dinamcally. One improve the development and it's better to work with it. But dealing with performance, sometimes hard is much better.
+
+## Roadmap
+
+You can see on [roadmap](ROADMAP.txt)

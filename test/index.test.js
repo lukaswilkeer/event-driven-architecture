@@ -1,23 +1,19 @@
-import sinon from 'sinon'
-import chai from 'chai'
 import { expect } from 'chai'
-import socketClient from 'socket.io-client'
 import io from '../index'
 import { socketConnect } from './__mocks__/connect'
 import { userToken } from './__mocks__/tokens'
 
 describe('Connection', () => {
-  it('should connect the user to the api', (done) => {
+  it.only('should connect the user to the api', (done) => {
+    // add user token validation
     const client = socketConnect(userToken)
 
-    // get the clients connections
-    let connections = []
-    Object.keys(io.engine.clients).map((key) => {
-      connections[key] = io.engine.clients[key]
-    })
-    
-    client.on('connect', (socket) => {
-      expect(connections.length).to.be.gte(0)
+    const message = Buffer.from(decodeURIComponent({event: 'api.serive.status', data: true}))
+
+    client.write(message)
+    client.on('message', (message) => {
+      message = message.toString('utf8')
+      expect(message).to.be.equals(true)
       done()
     })
   })
