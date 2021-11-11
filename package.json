@@ -1,6 +1,6 @@
 {
   "name": "event-driven-architecture",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "A event driven archetecture api",
   "main": "index.js",
   "scripts": {
