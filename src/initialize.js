@@ -1,54 +1,54 @@
-import fs from 'fs'
-import debug from 'debug'
-import { stats } from 'fs'
-import { join, init } from 'lodash/fp'
+import fs from "fs";
+import debug from "debug";
+import { stats } from "fs";
+import { join, init } from "lodash/fp";
 
-const log = debug('app')
+const log = debug("app");
 
-const forwadSlash = /\//ig
+const forwadSlash = /\//ig;
 
 const mountDir = (dir) => {
-  const splited = dir.split(forwadSlash)
-  const dired = removeDotJs(join('.', splited))
+  const splited = dir.split(forwadSlash);
+  const dired = removeDotJs(join(".", splited));
 
-  return dired
-}
+  return dired;
+};
 
 const removeDotJs = (filename) => {
-  const extension = /\.[0-9a-z]+$/i
+  const extension = /\.[0-9a-z]+$/i;
 
-  return join('', init((filename.split(extension))))
-}
+  return join("", init((filename.split(extension))));
+};
 
-export const services = new Map()
+export const services = new Map();
 
 export const logServices = () => {
-  log('Logging services')
+  log("Logging services");
 
   for (const service of services.entries()) {
-    log(`${service[0]} up`)
+    log(`${service[0]} up`);
   }
-}
+};
 
 export const initializeServices = (dir) => fs.readdir(`${process.cwd()}/src/${dir}`, (err, itens) => {
-  if (err instanceof Error && err.code == 'ENOTDIR') {
-    services.set(`${mountDir(dir)}`, `./src/${dir}`)
+  if (err instanceof Error && err.code == "ENOTDIR") {
+    services.set(`${mountDir(dir)}`, `./src/${dir}`);
   } else {
     itens.map((file) => {
       const isFile = fs.stat(`${process.cwd()}/src/${dir}/${file}`, (err, stat) => {
         if (err) {
-          return false
+          return false;
         } else {
-          return !stat.isDirectory()
+          return !stat.isDirectory();
         }
-      })
+      });
 
       if (isFile) {
-        services.set(`api.${mountDir(dir)}.${removeDotJs(file)}`, `./src/${dir}`)
+        services.set(`api.${mountDir(dir)}.${removeDotJs(file)}`, `./src/${dir}`);
       } else {
-        const currentDir = `${dir}/${file}`
-        initializeServices(currentDir)
+        const currentDir = `${dir}/${file}`;
+        initializeServices(currentDir);
       }
-    })
+    });
   }
-})
+});

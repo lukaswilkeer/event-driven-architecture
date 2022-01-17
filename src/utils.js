@@ -1,7 +1,7 @@
 export const getAuthHeader = (socket) => {
-	return socket?.handshake?.headers?.authorization
-}
+  return socket?.handshake?.headers?.authorization;
+};
 
 export const getData = (decoded) => {
-	return decoded?.data
-}
+  return decoded?.data;
+};
