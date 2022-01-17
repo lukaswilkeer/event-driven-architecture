@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import chai from "chai";
 import { expect } from "chai";
-import socketConnect from "../__mocks__/connect";
+import { socketConnect } from "../__mocks__/connect";
 import { userToken } from "../__mocks__/tokens";
 import "../../index";
 

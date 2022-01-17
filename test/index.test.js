@@ -15,7 +15,7 @@ describe("Connection", () => {
     Object.keys(io.engine.clients).map((key) => {
       connections[key] = io.engine.clients[key];
     });
-    
+
     client.on("connect", (socket) => {
       expect(connections.length).to.be.gte(0);
       done();
